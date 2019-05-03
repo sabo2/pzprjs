@@ -82,6 +82,7 @@ delete variety.extend;
 	cojun     :[0,0,"コージュン","Cojun",'ripple'],
 	country   :[1,0,"カントリーロード","Country Road"],
 	creek     :[1,0,"クリーク","Creek"],
+	dbchoco   :[0,0,"ダブルチョコ","Double Chocolate",'cbblock'],
 	dosufuwa  :[0,0,"ドッスンフワリ","Dosun-Fuwari"],
 	easyasabc :[0,0,"ABCプレース","Easy as ABC"],
 	factors   :[0,0,"因子の部屋","Rooms of Factors"],
