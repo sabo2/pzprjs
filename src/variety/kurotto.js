@@ -201,8 +201,8 @@ AnsCheck:{
 		"checkShadeCellExist",
 		"checkConnectUnshade@nurimisaki",
 		"check2x2ShadeCell+@nurimisaki",
-		"checkCapeSingleUnshaded@nurimisaki",
 		"checkNonCapePruralUnshaded@nurimisaki",
+		"checkCapeSingleUnshaded@nurimisaki",
 		"checkCellNumber_kurotto",
 		"check2x2UnshadeCell++@nurimisaki"
 	],
