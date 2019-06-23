@@ -50,10 +50,10 @@ MouseEvent:{
 		}
 	},
 	inputLineEnd : function(){
-		if(this.firstCell.isnull){ return;}
-		var room1 = this.firstCell.room, room2 = (this.puzzle.execConfig('dispmove') ? this.mouseCell.room : this.firstCell.path.destination.room);
+		if(!this.firstCell || this.firstCell.isnull){ return;}
+		var room1 = this.firstCell.room, room2 = (this.puzzle.execConfig('dispmove') ? this.mouseCell.room : (!!this.firstCell.path ? this.firstCell.path.destination.room : null));
 		room1.checkAutoCmp();
-		if(room1!==room2){
+		if(room1!==room2 && !!room2){
 			room2.checkAutoCmp();
 		}
 	},
@@ -123,8 +123,13 @@ Cell:{
 		
 		if(!this.puzzle.execConfig('autocmp')){ return false;}
 		
-		var	num = targetcell.getNum();
-		if(this.path===null){ return (num===0);}
+		return targetcell.checkCmp();
+	},
+	checkCmp: function(){
+		if(this.isnull){ return false;}
+		var	num = this.getNum();
+		if(this.qcmp===1){ return true;}
+		else if(this.path===null){ return (num===0);}
 		else{
 			var clist = (this.path!==null ? this.path.clist : [this]);
 			var d = clist.getRectSize();
@@ -169,16 +174,24 @@ Cell:{
 },
 "CellList@sato":{
 	checkCmp : function(){
-		var scnt=0, cell;
+		var scnt=0;
 		for(var i=0;i<this.length;i++){
-			if(this[i].base.isNum()){ scnt++; cell = this[i].base;}
+			if(this[i].base.checkCmp()){ scnt++;}
 		}
-		if(scnt!==1){ return false;}
-		var d = cell.path.clist.getRectSize();
-		if(d.cols!==1 && d.rows!==1){ return false;}
-		if(cell.qcmp===1){ return true;}
-		var num = cell.getNum();
-		return (num===(cell.path.nodes.length-1));
+		return (scnt===1);
+	}
+},
+"Border@sato":{
+	posthook : {
+		line : function(num){
+			var opemgr = this.puzzle.opemgr;
+			if(!opemgr.undoExec && !opemgr.redoExec){ return;}
+			var room1 = this.sidecell[0].room, room2 = this.sidecell[1].room;
+			room1.checkAutoCmp();
+			if(room1!==room2){
+				room2.checkAutoCmp();
+			}
+		}
 	}
 },
 
