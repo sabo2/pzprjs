@@ -135,7 +135,8 @@ Graphic:{
 		this.drawBGCells();
 		this.drawShadedCells();
 		this.drawDotCells(false);
-		this.drawGrid();
+		if(this.pid==='kurotto'){ this.drawGrid();}
+		else if(this.pid==='nurimisaki'){ this.drawDashedGrid();}
 
 		this.drawCircledNumbers();
 
