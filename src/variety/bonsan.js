@@ -1,14 +1,14 @@
 //
-// パズル固有スクリプト部 ぼんさん・へやぼん・四角スライダー版 bonsan.js
+// パズル固有スクリプト部 ぼんさん・へやぼん・さとがえり・四角スライダー版 bonsan.js
 //
 (function(pidlist, classbase){
 	if(typeof module==='object' && module.exports){module.exports = [pidlist, classbase];}
 	else{ pzpr.classmgr.makeCustom(pidlist, classbase);}
 }(
-['bonsan','heyabon','rectslider'], {
+['bonsan','heyabon','sato','rectslider'], {
 //---------------------------------------------------------
 // マウス入力系
-"MouseEvent@bonsan,heyabon":{
+"MouseEvent@bonsan,heyabon,sato":{
 	inputModes : {edit:['number','clear'],play:['line','bgcolor','bgcolor1','bgcolor2','clear','completion']},
 	mouseinput : function(){ // オーバーライド
 		if(this.inputMode==='completion'){ if(this.mousestart){ this.inputqcmp(1);}}
@@ -24,11 +24,14 @@ MouseEvent:{
 			if(this.mousestart || this.mousemove){
 				if(this.btn==='left'){ this.inputLine();}
 			}
-			else if(this.mouseend && this.notInputted()){ this.inputlight();}
+			else if(this.mouseend){
+				if(this.notInputted()){ this.inputlight();}
+				else if(this.pid==='sato'){ this.inputLineEnd();}
+			}
 		}
 		else if(this.puzzle.editmode){
 			if(this.mousestart || this.mousemove){
-				if(this.pid==='heyabon'){ this.inputborder();}
+				if(this.pid==='heyabon'||this.pid==='sato'){ this.inputborder();}
 			}
 			else if(this.mouseend && this.notInputted()){ this.inputqnum();}
 		}
@@ -37,9 +40,21 @@ MouseEvent:{
 	inputLine : function(){
 		this.common.inputLine.call(this);
 		
+		if(this.mousestart){
+			this.firstCell = this.getcell();
+		}
+		
 		/* "丸数字を移動表示しない"場合の背景色描画準備 */
 		if(this.puzzle.execConfig('autocmp') && !this.puzzle.execConfig('dispmove') && !this.notInputted()){
 			this.inputautodark();
+		}
+	},
+	inputLineEnd : function(){
+		if(!this.firstCell || this.firstCell.isnull){ return;}
+		var room1 = this.firstCell.room, room2 = (this.puzzle.execConfig('dispmove') ? this.mouseCell.room : (!!this.firstCell.path ? this.firstCell.path.destination.room : null));
+		room1.checkAutoCmp();
+		if(room1!==room2 && !!room2){
+			room2.checkAutoCmp();
 		}
 	},
 	inputautodark : function(){
@@ -66,6 +81,7 @@ MouseEvent:{
 
 		var puzzle = this.puzzle;
 		if(puzzle.pid!=='rectslider' && this.inputdark(cell,1)){ return;}
+		if(puzzle.pid==='sato'){ return;}
 
 		if(this.mouseend && this.notInputted()){ this.mouseCell = this.board.emptycell;}
 		this.inputBGcolor();
@@ -107,8 +123,13 @@ Cell:{
 		
 		if(!this.puzzle.execConfig('autocmp')){ return false;}
 		
-		var	num = targetcell.getNum();
-		if(this.path===null){ return (num===0);}
+		return targetcell.checkCmp();
+	},
+	checkCmp: function(){
+		if(this.isnull){ return false;}
+		var	num = this.getNum();
+		if(this.qcmp===1){ return true;}
+		else if(this.path===null){ return (num===0);}
 		else{
 			var clist = (this.path!==null ? this.path.clist : [this]);
 			var d = clist.getRectSize();
@@ -124,7 +145,12 @@ Cell:{
 	},
 	minnum : 0
 },
-"Cell@heyabon":{
+"Cell@sato":{
+	posthook : {
+		qnum : function(num){ this.room.checkAutoCmp();},
+		qcmp : function(num){ this.path.destination.room.checkAutoCmp();}
+	},
+
 	distance : null,
 
 	// pencilbox互換関数 ここではファイル入出力用
@@ -144,6 +170,28 @@ Cell:{
 		else if(val===1){ adb.left.line   = 1;}
 		else if(val===2){ adb.bottom.line = 1;}
 		else if(val===3){ adb.right.line  = 1;}
+	}
+},
+"CellList@sato":{
+	checkCmp : function(){
+		var scnt=0;
+		for(var i=0;i<this.length;i++){
+			if(this[i].base.checkCmp()){ scnt++;}
+		}
+		return (scnt===1);
+	}
+},
+"Border@sato":{
+	posthook : {
+		line : function(num){
+			var opemgr = this.puzzle.opemgr;
+			if(!opemgr.undoExec && !opemgr.redoExec){ return;}
+			var room1 = this.sidecell[0].room, room2 = this.sidecell[1].room;
+			room1.checkAutoCmp();
+			if(room1!==room2){
+				room2.checkAutoCmp();
+			}
+		}
 	}
 },
 
@@ -189,7 +237,7 @@ LineGraph:{
 	}
 },
 
-"AreaRoomGraph@bonsan,heyabon":{
+"AreaRoomGraph@bonsan,heyabon,sato":{
 	enabled : true
 },
 "AreaShadeGraph@rectslider":{
@@ -222,7 +270,7 @@ Graphic:{
 	paint : function(){
 		this.drawBGCells();
 		this.drawGrid();
-		if(this.pid==='heyabon'){ this.drawBorders();}
+		if(this.pid==='heyabon'||this.pid==='sato'){ this.drawBorders();}
 
 		this.drawTip();
 		this.drawDepartures();
@@ -234,6 +282,9 @@ Graphic:{
 
 		this.drawTarget();
 	}
+},
+"Graphic@sato":{
+	bgcellcolor_func : "qcmp"
 },
 "Graphic@rectslider":{
 	fontShadecolor : "white",
@@ -283,7 +334,7 @@ Graphic:{
 		this.encodeNumber16();
 	}
 },
-"Encode@heyabon":{
+"Encode@heyabon,sato":{
 	decodePzpr : function(type){
 		this.decodeBorder();
 		this.decodeNumber16();
@@ -291,9 +342,9 @@ Graphic:{
 	encodePzpr : function(type){
 		this.encodeBorder();
 		this.encodeNumber16();
-	},
-
-	// heyabonのみ(さとがえり出力)
+	}
+},
+"Encode@sato":{
 	decodeKanpen : function(){
 		this.fio.decodeAreaRoom();
 		this.fio.decodeQnum_PBox_Sato();
@@ -339,8 +390,9 @@ FileIO:{
 		this.encodeCell( function(cell){
 			return (cell.qsub + (cell.qcmp << 4))+" ";
 		});
-	},
-
+	}
+},
+"FileIO@sato":{
 	/* さとがえり用出力です */
 	kanpenOpen : function(){
 		this.decodeAreaRoom();
@@ -420,8 +472,9 @@ AnsCheck:{
 
 		"checkLineLength",
 
-		"checkFractal@!rectslider",
-		"checkNoObjectBlock@heyabon",
+		"checkFractal@bonsan,heyabon",
+		"checkPluralObjectBlock@sato",
+		"checkNoObjectBlock@heyabon,sato",
 
 		"checkNoMoveCircle",
 		"checkDisconnectLine"
@@ -455,6 +508,9 @@ AnsCheck:{
 	},
 	checkNoObjectBlock : function(){
 		this.checkNoMovedObjectInRoom(this.board.roommgr);
+	},
+	checkPluralObjectBlock : function(){
+		this.checkAllBlock(this.board.roommgr, function(cell){ return cell.base.qnum!==-1;}, function(w,h,a,n){ return (a<2);}, "bkNumGe2");
 	}
 },
 "AnsCheck@rectslider":{
@@ -468,6 +524,7 @@ AnsCheck:{
 
 FailCode:{
 	bkNoNum : ["○のない部屋があります。","A room has no circle."],
+	bkNumGe2 : ["○が部屋に2つ以上あります。","A room has two or more circles."],
 	bkObjNotSym : ["部屋の中の○が点対称に配置されていません。", "Position of circles in the room is not point symmetric."],
 	brObjNotSym : ["○が点対称に配置されていません。", "Position of circles is not point symmetric."],
 	laOnNum : ["○の上を線が通過しています。","A line goes through a circle."],

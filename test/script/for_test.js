@@ -576,7 +576,7 @@ var debug = window.debug =
 	bd_compare : function(bd1,bd2,iskanpen){
 		var result = true;
 		var pid = bd1.pid;
-		var ignore_qsub = (!!iskanpen && (pid==='fillomino'||pid==='hashikake'||pid==='heyabon'||pid==='kurodoko'||pid==='shikaku'||pid==='tentaisho'));
+		var ignore_qsub = (!!iskanpen && (pid==='fillomino'||pid==='hashikake'||pid==='heyabon'||pid==='kurodoko'||pid==='sato'||pid==='shikaku'||pid==='tentaisho'));
 		var self = this;
 		bd1.compareData(bd2,function(group, c, a){
 			if(ignore_qsub && (a==='qsub' || a==='qcmp')){ return;}

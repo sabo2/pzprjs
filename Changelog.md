@@ -1,4 +1,13 @@
 
+## Version 0.11.0
+
+Release date: 2019/6/23
+
+#### New puzzle
+
+* nurimisaki: Introduce new puzzle: Nuri-Misaki
+* sato: Introduce new puzzle: Satogaeri
+
 ## Version 0.10.1
 
 Release date: 2019/6/19

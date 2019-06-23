@@ -92,6 +92,7 @@ AnsCheck:{
 	//---------------------------------------------------------------------------
 	// ans.check2x2Block()      2x2のセルが全て条件func==trueの時、エラーを設定する
 	// ans.check2x2ShadeCell()  2x2のセルが黒マスの時、エラーを設定する
+	// ans.check2x2UnshadeCell() 2x2のセルが白マスの時、エラーを設定する
 	//---------------------------------------------------------------------------
 	check2x2Block : function(func, code){
 		var bd = this.board;
@@ -110,6 +111,9 @@ AnsCheck:{
 	},
 	check2x2ShadeCell : function(){
 		this.check2x2Block( function(cell){ return cell.isShade();}, "cs2x2" );
+	},
+	check2x2UnshadeCell : function(){
+		this.check2x2Block( function(cell){ return cell.isUnshade();}, "cu2x2" );
 	},
 
 	//---------------------------------------------------------------------------
@@ -664,6 +668,7 @@ AnsCheck:{
 FailCode:{
 	/* ** 黒マス ** */
 	cs2x2       : ["2x2の黒マスのかたまりがあります。","There is a 2x2 block of shaded cells."],
+	cu2x2       : ["2x2の白マスのかたまりがあります。","There is a 2x2 block of unshaded cells."],
 	csNotSquare : ["正方形でない黒マスのカタマリがあります。","A mass of shaded cells is not regular rectangle."],
 	csAdjacent  : ["黒マスがタテヨコに連続しています。","Shaded cells are adjacent."],
 	csDivide    : ["黒マスが分断されています。","Shaded cells are divided,"],

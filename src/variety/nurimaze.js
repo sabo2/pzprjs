@@ -489,10 +489,6 @@ AnsCheck:{
 		this.checkAllCell( function(cell){ return cell.qans===1 && (cell.ques!==0 || bd.startpos.equals(cell) || bd.goalpos.equals(cell));}, "objShaded" );
 	},
 
-	check2x2UnshadeCell : function(){
-		this.check2x2Block( function(cell){ return cell.isUnshade();}, "cu2x2" );
-	},
-
 	checkUnshadeLoop : function(){
 		var bd = this.board, ublks = bd.ublkmgr.components;
 		for(var r=0;r<ublks.length;r++){
@@ -617,7 +613,6 @@ AnsCheck:{
 },
 
 FailCode:{
-	cu2x2  : ["2x2の白マスのかたまりがあります。","There is a 2x2 block of unshaded cells."],
 	cuLoop : ["白マスで輪っかができています。","There is a looped unshaded cells."],
 	routeIgnoreCP   : ["○がSからGへの経路上にありません。","There is a circle out of the shortest route from S to G."],
 	routePassDeadEnd: ["△がSからGへの経路上にあります。","There is a triangle on the shortest route from S to G."],

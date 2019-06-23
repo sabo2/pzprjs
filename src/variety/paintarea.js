@@ -115,14 +115,10 @@ AnsCheck:{
 
 	checkDir4ShadeCell : function(){
 		this.checkDir4Cell(function(cell){ return cell.isShade();},0, "nmShadeNe");
-	},
-	check2x2UnshadeCell : function(){
-		this.check2x2Block( function(cell){ return cell.isUnshade();}, "cu2x2" );
 	}
 },
 
 FailCode:{
-	cu2x2     : ["2x2の白マスのかたまりがあります。","There is a 2x2 block of unshaded cells."],
 	nmShadeNe : ["数字の上下左右にある黒マスの数が間違っています。","The number is not equal to the number of shaded cells in four adjacent cells."]
 }
 }));
