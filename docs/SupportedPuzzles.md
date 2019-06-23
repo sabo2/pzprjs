@@ -14,7 +14,7 @@ As well as the name of the puzzle, acceptable pid for puzzle.open() API is indic
 * LITS `lits`
 
 ### Reserver
-* Uso-one `usoone`
+* Nur-Misaki `nurimisaki`
 
 ### Nigun (Legacy)
 * Yajisan-Kazusan `yajikazu`
@@ -23,6 +23,7 @@ As well as the name of the puzzle, acceptable pid for puzzle.open() API is indic
 * Shimaguni `shimaguni`
 * Tasquare `tasquare`
 * Kurotto `kurotto`
+* Uso-one `usoone`
 
 ### Omopa
 * Nuribou `nuribou`
@@ -45,15 +46,13 @@ As well as the name of the puzzle, acceptable pid for puzzle.open() API is indic
 * Yajirin `yajirin` `yajilin`
 * Slalom `slalom`
 
-### Reserver
-* Nagareru-loop `nagare`
-* Moon or Sun `moonsun`
-
 ### Nigun (Legacy)
 * BAG (Correl) `bag` `correl` `cave`
 * Country-road `country`
 * Reflect-link `reflect`
 * Icebarn `icebarn`
+* Nagareru-loop `nagare`
+* Moon or Sun `moonsun`
 
 ### Omopa
 * Pipelink `pipelink`
@@ -90,6 +89,7 @@ As well as the name of the puzzle, acceptable pid for puzzle.open() API is indic
 * Amibo `amibo`
 * Rectangle Slider `rectslider`
 * Army Ants `armyants`
+* Satogaeri `sato` `satogaeri`
 
 Kanpen/Pencillbox's Sato/Satogaeri URL/file is opened as Heyabon.
 
@@ -166,12 +166,10 @@ Kanpen/Pencillbox's Sato/Satogaeri URL/file is opened as Heyabon.
 * Akari `lightup` `akari` `bijutsukan`
 * Shakashaka `shakashaka`
 
-### Reserver
-* Dosun-Fuwari `dosufuwa`
-
 ### Nigun (Legacy)
 * Kinkonkan `kinkonkan`
 * Gokigen-naname `gokigen`
+* Dosun-Fuwari `dosufuwa`
 
 ### Omopa
 * Hokoiri-masashi `hakoiri`
