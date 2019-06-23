@@ -24,7 +24,10 @@ MouseEvent:{
 			if(this.mousestart || this.mousemove){
 				if(this.btn==='left'){ this.inputLine();}
 			}
-			else if(this.mouseend && this.notInputted()){ this.inputlight();}
+			else if(this.mouseend){
+				if(this.notInputted()){ this.inputlight();}
+				else if(this.pid==='sato'){ this.inputLineEnd();}
+			}
 		}
 		else if(this.puzzle.editmode){
 			if(this.mousestart || this.mousemove){
@@ -37,9 +40,21 @@ MouseEvent:{
 	inputLine : function(){
 		this.common.inputLine.call(this);
 		
+		if(this.mousestart){
+			this.firstCell = this.getcell();
+		}
+		
 		/* "丸数字を移動表示しない"場合の背景色描画準備 */
 		if(this.puzzle.execConfig('autocmp') && !this.puzzle.execConfig('dispmove') && !this.notInputted()){
 			this.inputautodark();
+		}
+	},
+	inputLineEnd : function(){
+		if(this.firstCell.isnull){ return;}
+		var room1 = this.firstCell.room, room2 = (this.puzzle.execConfig('dispmove') ? this.mouseCell.room : this.firstCell.path.destination.room);
+		room1.checkAutoCmp();
+		if(room1!==room2){
+			room2.checkAutoCmp();
 		}
 	},
 	inputautodark : function(){
@@ -127,7 +142,8 @@ Cell:{
 },
 "Cell@sato":{
 	posthook : {
-		qnum : function(num){ this.room.checkAutoCmp();}
+		qnum : function(num){ this.room.checkAutoCmp();},
+		qcmp : function(num){ this.path.destination.room.checkAutoCmp();}
 	},
 
 	distance : null,
@@ -151,24 +167,18 @@ Cell:{
 		else if(val===3){ adb.right.line  = 1;}
 	}
 },
-"Border@sato":{
-	posthook : {
-		line : function(num){
-			var room1 = this.sidecell[0].room, room2 = this.sidecell[1].room;
-			if(room1!==room2){
-				room1.checkAutoCmp();
-				room2.checkAutoCmp();
-			}
-		}
-	}
-},
 "CellList@sato":{
 	checkCmp : function(){
-		var scnt=0;
+		var scnt=0, cell;
 		for(var i=0;i<this.length;i++){
-			if(this[i].base.isNum()){ scnt++;}
+			if(this[i].base.isNum()){ scnt++; cell = this[i].base;}
 		}
-		return (scnt===1);
+		if(scnt!==1){ return false;}
+		var d = cell.path.clist.getRectSize();
+		if(d.cols!==1 && d.rows!==1){ return false;}
+		if(cell.qcmp===1){ return true;}
+		var num = cell.getNum();
+		return (num===(cell.path.nodes.length-1));
 	}
 },
 
