@@ -284,6 +284,7 @@ Graphic:{
 	}
 },
 "Graphic@sato":{
+	autocmp : "room_number",
 	bgcellcolor_func : "qcmp"
 },
 "Graphic@rectslider":{
