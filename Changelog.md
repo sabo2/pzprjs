@@ -1,4 +1,17 @@
 
+## Version 0.11.1
+
+Release date: 2019/6/29
+
+#### BugFix
+
+* tapa: Fix answer check failed when question number has ? marks (#7)
+* nanro: Check remaining aux. circle cells (#8)
+
+#### Minor Changes
+
+* sato: Change autocmp type from number to room_number
+
 ## Version 0.11.0
 
 Release date: 2019/6/23

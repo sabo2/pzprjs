@@ -1,4 +1,17 @@
 
+## Version 0.11.1
+
+Release date: 2019/6/29
+
+#### BugFix
+
+* Tapa: 盤面に？がある時の正答判定が失敗する不具合を修正 (#7)
+* ナンロー: 回答チェックで○がある時は正答としないように修正 (#8)
+
+#### Minor Changes
+
+* さとがえり: Graphicクラスのautocmp設定値をnumberからroom_numberに変更
+
 ## Version 0.11.0
 
 Release date: 2019/6/23
